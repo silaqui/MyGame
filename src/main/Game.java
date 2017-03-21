@@ -1,7 +1,14 @@
 package main;
 
+import control.KeyInput;
+import objects.BasicEnemy;
+import objects.HUD;
+import objects.Player;
+import utility.ID;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable {
 
@@ -11,9 +18,22 @@ public class Game extends Canvas implements Runnable {
 
     private Thread thread;
     private boolean running = false;
+    private HUD hud;
+    private Handler handler;
 
     public Game() {
+        handler = new Handler();
+        hud = new HUD();
+        this.addKeyListener(new KeyInput(handler));
+
         new window.Window(WIDTH, HEIGHT, "Yeah game!", this);
+
+        handler.addObject(new Player(WIDTH / 2, HEIGHT / 2, ID.Player));
+//        for (int i = 0; i < 20; i++)
+
+            Random random = new Random();
+            handler.addObject(new BasicEnemy(random.nextInt(WIDTH), random.nextInt(HEIGHT), ID.BasicEnemy));
+
     }
 
     public synchronized void start() {
@@ -33,6 +53,7 @@ public class Game extends Canvas implements Runnable {
 
     @Override
     public void run() {
+        this.requestFocus();
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
@@ -54,7 +75,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: " + frames);
+//                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -62,27 +83,39 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-
+        handler.tick();
+        hud.tick();
     }
 
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null)
-        {
+        if (bs == null) {
             this.createBufferStrategy(3);
             return;
         }
 
-        Graphics g =  bs.getDrawGraphics();
+        Graphics g = bs.getDrawGraphics();
 
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0,0,WIDTH,HEIGHT);
+        g.setColor(Color.black);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        handler.render(g);
+        hud.render(g);
 
         g.dispose();
         bs.show();
 
     }
 
+    public static int clamp(int var, int max, int min) {
+        if (var >= max) {
+            var = max;
+        }
+        if (var <= min) {
+            var = min;
+        }
+        return var;
+    }
 
     public static void main(String[] args) {
 
