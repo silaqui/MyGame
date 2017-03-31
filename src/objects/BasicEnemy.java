@@ -18,6 +18,11 @@ public class BasicEnemy extends GameObject {
     }
 
     @Override
+    public Rectangle getBounds() {
+        return new Rectangle(x,y,16,16);
+    }
+
+    @Override
     public void tick() {
         x += velX;
         y += velY;
@@ -27,6 +32,7 @@ public class BasicEnemy extends GameObject {
 
     @Override
     public void render(Graphics g) {
+
         g.setColor(Color.RED);
         g.fillRect(x, y, 16, 16);
     }

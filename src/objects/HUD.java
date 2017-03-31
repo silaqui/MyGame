@@ -12,7 +12,6 @@ public class HUD {
     public static int Health = 100;
 
     public void tick() {
-        Health--;
         Health=clamp(Health,200,0);
     }
 
