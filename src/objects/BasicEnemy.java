@@ -1,6 +1,7 @@
 package objects;
 
 import main.Game;
+import main.Handler;
 import utility.ID;
 
 import java.awt.*;
@@ -10,8 +11,12 @@ import java.awt.*;
  */
 public class BasicEnemy extends GameObject {
 
-    public BasicEnemy(int x, int y, ID id) {
+    private Handler handler;
+
+    public BasicEnemy(int x, int y, ID id,Handler handler) {
         super(x, y, id);
+
+        this.handler=handler;
 
         velX=5;
         velY=5;
@@ -28,6 +33,7 @@ public class BasicEnemy extends GameObject {
         y += velY;
         if(y<=0||y>=Game.HEIGHT-32){velY*=-1;}
         if(x<=0||x>=Game.WIDTH-32){velX*=-1;}
+        handler.addObject(new Trail(x,y,ID.Trial,Color.PINK,16,16, 0.01f,handler) );
     }
 
     @Override

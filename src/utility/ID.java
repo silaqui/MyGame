@@ -6,6 +6,7 @@ package utility;
 public enum ID {
 
     Player(),
-    BasicEnemy()
+    BasicEnemy(),
+    Trial()
 
 }
